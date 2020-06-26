@@ -375,12 +375,16 @@ func (p *proccache) GetStatic() (Static, error) {
 
 	name := stat.Comm
 	if stat.Comm == "gotada" {
-		cmd := ""
-		for _, s := range cmdline {
-			cmd += s + " "
+		suffix := ""
+		for i, s := range cmdline {
+			if i == 0 || strings.Index(s, "-") != 0 {
+				continue
+			}
+
+			suffix = strings.Replace(s, "-", "", -1)
+			suffix = strings.Replace(suffix, " ", "_", -1)
 		}
-		suffix := strings.Replace(cmd, "-", "", -1)
-		suffix = strings.Replace(suffix, " ", "_", -1)
+
 		if suffix != "" {
 			name += "_" + suffix
 		}
